@@ -1,0 +1,42 @@
+name: Daily Weather ETL
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # Runs every day at 6:00 UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  run-etl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create config.yaml from secrets
+        run: |
+          mkdir -p src/config
+          cat > src/config/config.yaml <<EOF
+          api_url: "https://api.open-meteo.com/v1/forecast"
+          database:
+            host: "${{ secrets.NEON_HOST }}"
+            port: "${{ secrets.NEON_PORT }}"
+            dbname: "${{ secrets.NEON_DBNAME }}"
+            user: "${{ secrets.NEON_USER }}"
+            password: "${{ secrets.NEON_PASSWORD }}"
+            sslmode: "${{ secrets.NEON_SSLMODE }}"
+          EOF
+
+      - name: Run ETL
+        run: |
+          python3 src/etl/ingest_weather.py
