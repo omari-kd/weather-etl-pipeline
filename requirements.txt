@@ -1,7 +1,7 @@
 pandas 
 requests
 sqlalchemy
-time
+#time
 schedule
 sqlite3
 # apache-airflow
