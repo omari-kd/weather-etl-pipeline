@@ -6,3 +6,5 @@ querydata2.py
 schedule.py
 weather_etl.py
 weather_etl2.py
+plot_weather.py
+Readme.md
