@@ -3,6 +3,6 @@ requests
 sqlalchemy
 #time
 schedule
-sqlite3
+# sqlite3
 # apache-airflow
 pyyaml
