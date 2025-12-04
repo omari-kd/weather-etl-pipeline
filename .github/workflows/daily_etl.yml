@@ -22,6 +22,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
+        # pip install -r requirements.txt --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.10.3/constraints-3.10.txt
 
       - name: Create config.yaml from secrets
         run: |

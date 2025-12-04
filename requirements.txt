@@ -4,5 +4,5 @@ sqlalchemy
 time
 schedule
 sqlite3
-apache-airflow
+# apache-airflow
 pyyaml
