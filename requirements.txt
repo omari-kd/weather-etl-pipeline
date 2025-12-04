@@ -6,3 +6,4 @@ schedule
 # sqlite3
 # apache-airflow
 pyyaml
+psycopg2-binary
