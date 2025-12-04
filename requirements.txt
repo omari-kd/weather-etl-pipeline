@@ -1,0 +1,8 @@
+pandas 
+requests
+sqlalchemy
+time
+schedule
+sqlite3
+apache-airflow
+pyyaml

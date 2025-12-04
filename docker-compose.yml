@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: weather_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: weatherdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    container_name: weather_adminer
+    ports:
+      - "8080:8080"
+
+  etl:
+    build: ./docker
+    container_name: weather_etl
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

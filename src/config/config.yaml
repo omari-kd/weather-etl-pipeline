@@ -1,0 +1,9 @@
+api_url: "https://api.open-meteo.com/v1/forecast"
+
+database:
+  host: "ep-bold-truth-a4769enj-pooler.us-east-1.aws.neon.tech"
+  port: 5432
+  dbname: "weather_db"
+  user: "neondb_owner"
+  password: "npg_COxFy2MwSfV0"
+  sslmode: "require"

@@ -1,0 +1,8 @@
+.venv/
+venv/
+
+querydata.py
+querydata2.py
+schedule.py
+weather_etl.py
+weather_etl2.py
