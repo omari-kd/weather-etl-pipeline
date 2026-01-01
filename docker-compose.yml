@@ -1,6 +1,7 @@
 version: "3.9"
 
 services:
+  # PostgreSQL Database
   db:
     image: postgres:15
     container_name: weather_postgres
@@ -9,21 +10,92 @@ services:
       POSTGRES_PASSWORD: yourpassword
       POSTGRES_DB: weatherdb
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  # Adminer (DB GUI)
   adminer:
     image: adminer
     container_name: weather_adminer
     ports:
       - "8080:8080"
-
-  etl:
-    build: ./docker
-    container_name: weather_etl
     depends_on:
       - db
 
+  # Airflow
+  airflow:
+    image: apache/airflow:2.10.0-python3.12
+    container_name: weather_airflow
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:yourpassword@db:5432/weatherdb
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+      - ./src:/opt/airflow/src
+      - ./requirements.txt:/requirements.txt
+    ports:
+      - "8081:8080"
+    command: >
+      bash -c "
+      pip install -r /requirements.txt &&
+      airflow db init &&
+      airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com &&
+      airflow webserver & airflow scheduler
+      "
+    depends_on:
+      - db
+
+  # ETL Container
+  etl:
+    build:
+      context: .         
+      dockerfile: docker/Dockerfile
+    container_name: weather_etl
+    depends_on:
+      - db
+      - airflow
+
 volumes:
   pgdata:
+
+
+
+# version: "3.9"
+
+# services:
+#   db:
+#     image: postgres:15
+#     container_name: weather_postgres
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: yourpassword
+#       POSTGRES_DB: weatherdb
+#     ports:
+#       - "5433:5432" # map container 5432 to host 5433 instead
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+
+#   adminer:
+#     image: adminer
+#     container_name: weather_adminer
+#     ports:
+#       - "8080:8080"
+
+#   etl:
+#     build:
+#       context: .
+#       dockerfile: ./docker/Dockerfile
+#     container_name: weather_etl
+#     depends_on:
+#       - db
+#     volumes:
+#       - ./src:/app/src  # Optional: allows live edits without rebuilding
+#     environment:
+#       - DATABASE_URL=postgresql://postgres:yourpassword@db:5432/weatherdb
+
+# volumes:
+#   pgdata:
+

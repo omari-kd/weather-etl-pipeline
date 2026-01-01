@@ -7,3 +7,10 @@ database:
   user: "neondb_owner"
   password: "npg_COxFy2MwSfV0"
   sslmode: "require"
+# database:
+#   host: "db"       # matches docker-compose service name
+#   port: 5432
+#   dbname: "weatherdb"
+#   user: "postgres"
+#   password: "yourpassword"
+#   sslmode: "disable"

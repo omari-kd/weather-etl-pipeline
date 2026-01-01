@@ -1,5 +1,6 @@
 .venv/
 venv/
+airflow/logs
 
 querydata.py
 querydata2.py
